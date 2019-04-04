@@ -1,0 +1,9 @@
+server:
+  port: 8000
+spring:
+  application:
+    name: microservice-consumer-user
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
