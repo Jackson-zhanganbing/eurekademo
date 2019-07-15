@@ -13,6 +13,6 @@ public class TestController {
 
     @RequestMapping("/user")
     public String getUser(){
-        return "hello eureka!provider1,8002";
+        return "hello eureka!provider1,8101";
     }
 }
