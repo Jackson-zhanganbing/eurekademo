@@ -1,0 +1,52 @@
+server:
+  port: 8201
+spring:
+  application:
+    name: microservice-consumer-user
+  redis:
+    host: 127.0.0.1
+    port: 6379
+  cache:
+    type: redis
+  kafka:
+    #bootstrap-servers: 127.0.0.1:9092,127.0.0.2:9092,127.0.0.3:9092
+    bootstrap-servers: 127.0.0.1:9092
+    producer:
+      retries: 0
+      batch-size: 16384
+      buffer-memory: 33554432
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      properties:
+        linger.ms: 1
+
+    consumer:
+      group-id: mygroup
+      enable-auto-commit: false
+      auto-commit-interval: 100ms
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      properties:
+        session.timeout.ms: 15000
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+      fetch-registry: true
+      register-with-eureka: false
+#  #feign 对hytrix的支持
+feign:
+  hystrix:
+    enabled: true
+ribbon:
+  ReadTimeout: 15000
+  ConnectTimeout: 60000
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 20000
