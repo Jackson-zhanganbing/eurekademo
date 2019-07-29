@@ -28,20 +28,19 @@ public class ConcurrentTest {
     private static final String url = "http://127.0.0.1:80/api/del_stock";
     private static AtomicInteger atomicInteger = new AtomicInteger();
     private static Integer index = 1;
-    static final CountDownLatch latch = new CountDownLatch(100);
-    static final CountDownLatch latch1 = new CountDownLatch(100);
+    static final CountDownLatch latch = new CountDownLatch(1000);
+    static final CountDownLatch latch1 = new CountDownLatch(1000);
 
     @GetMapping("/exe")
     public void exe() throws Exception {
-        ConcurrentTest concurrentTest = new ConcurrentTest();
         ThreadPoolExecutor executor = new ThreadPoolExecutor(100, 200, 60, TimeUnit.SECONDS, new LinkedBlockingDeque<>());
-        for (int i = 0; i < 100; i++) {
-            concurrentTest.f1(executor);
+        for (int i = 0; i < 1000; i++) {
+            f1(executor);
             latch1.countDown();
         }
 
         latch.await();
-        kafkaTemplate.send("xxx","test");
+
         System.out.println("执行完毕！");
         System.out.println("执行了" + atomicInteger.get() + "次");
 
@@ -63,6 +62,7 @@ public class ConcurrentTest {
             }
             String realUrl = url;
             atomicInteger.addAndGet(index);
+            kafkaTemplate.send("xxx","test");
             latch.countDown();
         }
     }
