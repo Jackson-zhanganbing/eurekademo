@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -24,18 +25,20 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ConcurrentTest {
     @Autowired
     private KafkaTemplate kafkaTemplate;
+    @Autowired
+    private RestTemplate restTemplate;
 
     private static final String url = "http://127.0.0.1:80/api/del_stock";
     private static AtomicInteger atomicInteger = new AtomicInteger();
     private static Integer index = 1;
-    static final CountDownLatch latch = new CountDownLatch(1000);
-    static final CountDownLatch latch1 = new CountDownLatch(1000);
+    static final CountDownLatch latch = new CountDownLatch(100);
+    static final CountDownLatch latch1 = new CountDownLatch(100);
 
     @GetMapping("/exe")
     public void exe() throws Exception {
         ThreadPoolExecutor executor = new ThreadPoolExecutor(100, 200, 60, TimeUnit.SECONDS, new LinkedBlockingDeque<>());
-        for (int i = 0; i < 1000; i++) {
-            f1(executor);
+        for (int i = 0; i < 100; i++) {
+            this.f1(executor);
             latch1.countDown();
         }
 
@@ -50,7 +53,6 @@ public class ConcurrentTest {
         executor.execute(new Decrement());
     }
 
-    @Component
     class Decrement implements Runnable {
 
         @Override
@@ -62,14 +64,13 @@ public class ConcurrentTest {
             }
             String realUrl = url;
             atomicInteger.addAndGet(index);
-            kafkaTemplate.send("xxx","test");
+            //方法一：
+            //kafkaTemplate.send("xxx","test");
+            //方法二：
+            String s = restTemplate.getForObject(realUrl, String.class);
             latch.countDown();
         }
     }
 
-    @GetMapping("/send")
-    public void sendMsg(){
-
-    }
 
 }

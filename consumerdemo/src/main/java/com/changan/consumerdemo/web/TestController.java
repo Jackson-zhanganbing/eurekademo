@@ -32,6 +32,9 @@ public class TestController {
     private TestService testService;
 
     @Autowired
+    private RedisLock redisLock;
+
+    @Autowired
     private RedisTemplate redisTemplate;
 
     @RequestMapping("/user")
@@ -74,16 +77,18 @@ public class TestController {
             }
         }).start();
         try {
-
-            if (redisTemplate.opsForValue().setIfAbsent("zab", uuid, 10, TimeUnit.SECONDS)) {
-                String stockStr = (String) redisTemplate.opsForValue().get("stock");
-                Integer stockInt = Integer.parseInt(stockStr);
-                if (stockInt > 0) {
-                    Integer stockChanged = stockInt - 1;
-                    redisTemplate.opsForValue().set("stock", stockChanged.toString());
-                    System.out.println("扣减成功！当前余额为：" + stockChanged);
-                } else {
-                    System.out.println("扣减失败，余额不足");
+            while (true) {
+                if (redisTemplate.opsForValue().setIfAbsent("zab", uuid, 10, TimeUnit.SECONDS)) {
+                    String stockStr = (String) redisTemplate.opsForValue().get("stock");
+                    Integer stockInt = Integer.parseInt(stockStr);
+                    if (stockInt > 0) {
+                        Integer stockChanged = stockInt - 1;
+                        redisTemplate.opsForValue().set("stock", stockChanged.toString());
+                        System.out.println("扣减成功！当前余额为：" + stockChanged);
+                    } else {
+                        System.out.println("扣减失败，余额不足");
+                    }
+                    break;
                 }
             }
         } finally {
@@ -92,6 +97,25 @@ public class TestController {
             }
         }
 
+
+    }
+
+    @RequestMapping("/del_stock1")
+    public void delOne1() {
+        redisLock.lock();
+        try {
+            String stockStr = (String) redisTemplate.opsForValue().get("stock");
+            Integer stockInt = Integer.parseInt(stockStr);
+            if (stockInt > 0) {
+                Integer stockChanged = stockInt - 1;
+                redisTemplate.opsForValue().set("stock", stockChanged.toString());
+                System.out.println("扣减成功！当前余额为：" + stockChanged);
+            } else {
+                System.out.println("扣减失败，余额不足");
+            }
+        } finally {
+            redisLock.unLock();
+        }
 
     }
 
@@ -105,9 +129,9 @@ public class TestController {
 
     @KafkaListener(groupId = "mygroup", topics = "xxx")
     public void listenKafka(ConsumerRecord record) {
-        String valStr = (String)record.value();
+        String valStr = (String) record.value();
         System.out.println(valStr);
-        if("test".equals(valStr)){
+        if ("test".equals(valStr)) {
             delOne();
         }
 
