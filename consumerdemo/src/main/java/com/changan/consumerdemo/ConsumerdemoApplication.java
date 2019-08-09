@@ -20,4 +20,5 @@ public class ConsumerdemoApplication {
     public RestTemplate getRestTemplate() {
         return new RestTemplate();
     }
+
 }

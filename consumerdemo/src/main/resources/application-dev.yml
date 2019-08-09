@@ -28,7 +28,14 @@ spring:
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       properties:
         session.timeout.ms: 15000
-
+  datasource:
+    name: eureka-test
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      url: jdbc:mysql://127.0.0.1:3306/zab
+      username: root
+      password: root
+      driver-class-name: com.mysql.jdbc.Driver
 eureka:
   client:
     service-url:
@@ -50,3 +57,8 @@ hystrix:
         isolation:
           thread:
             timeoutInMilliseconds: 20000
+mybatis:
+  mapper-locations: classpath:mapping/*.xml
+  type-aliases-package: com.changan.consumerdemo.entity
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
