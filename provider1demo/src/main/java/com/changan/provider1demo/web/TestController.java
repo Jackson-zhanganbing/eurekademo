@@ -15,4 +15,19 @@ public class TestController {
     public String getUser(){
         return "hello eureka!provider1,8101";
     }
+
+    @RequestMapping("/timeout")
+    public String timeout() throws InterruptedException{
+        Thread.sleep(1000000L);
+        return "hello eureka!provider1,8101";
+    }
+
+    @RequestMapping("/exception")
+    public String exception(){
+        if (System.currentTimeMillis() % 2 == 0) {
+            throw new RuntimeException("random exception");
+        }
+        return "success";
+
+    }
 }

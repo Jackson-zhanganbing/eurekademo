@@ -12,6 +12,9 @@ public class WasteDao {
 
     public String getWasteType(String wasteName) {
         WasteTypeTable wasteTypeTable = wasteTypeTableMapper.selectByWasteName(wasteName);
+        if (wasteTypeTable == null) {
+            return "";
+        }
         return wasteTypeTable.getWasteType();
     }
 }
