@@ -1,8 +1,6 @@
 package com.changan.consumerdemo.hystrix;
 
-import com.changan.consumerdemo.service.TestService;
 import com.netflix.hystrix.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;

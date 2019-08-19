@@ -1,8 +1,6 @@
 package com.changan.consumerdemo.web;
 
 import com.changan.consumerdemo.hystrix.UserAnnotationCommand;
-import com.changan.consumerdemo.hystrix.UserExceptionCommand;
-import com.changan.consumerdemo.hystrix.UserTimeoutCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
