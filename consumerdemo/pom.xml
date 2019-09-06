@@ -66,6 +66,7 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
+
         <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-ribbon -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -113,6 +114,13 @@
             <groupId>com.netflix.hystrix</groupId>
             <artifactId>hystrix-clj</artifactId>
             <version>1.5.18</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sms</groupId>
+            <artifactId>sms-spring-boot-starter</artifactId>
+            <version>RELEASE</version>
+            <scope>compile</scope>
         </dependency>
 
 

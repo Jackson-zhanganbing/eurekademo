@@ -10,8 +10,12 @@ public class IWasteServiceImpl implements IWasteService {
 
     @Autowired
     private WasteDao wasteDao;
+
     @Override
     public String getWasteType(String wasteName) {
-         return wasteDao.getWasteType(wasteName);
+        return wasteDao.getWasteType(wasteName);
+
     }
+
+
 }

@@ -1,6 +1,8 @@
 package com.changan.consumerdemo.web;
 
 import com.changan.consumerdemo.service.TestService;
+import com.sms.starter.dto.SendSMSDTO;
+import com.sms.starter.service.SMSService;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -36,6 +38,10 @@ public class TestController {
 
     @Autowired
     private RedisTemplate redisTemplate;
+
+    @Autowired
+    private SMSService service;
+
 
     @RequestMapping("/user")
     public String getUser() {

@@ -39,7 +39,7 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://localhost:7001/eureka
       fetch-registry: true
       register-with-eureka: false
 #  #feign 对hytrix的支持
@@ -74,3 +74,13 @@ mybatis:
   type-aliases-package: com.changan.consumerdemo.entity
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+sms-config:
+  account-sid: xxx #这里填写平台获取的ID和KEY
+  auth-token: xxx  #这里填写平台获取的ID和KEY
+  appid: xxx #这里填写平台获取的ID和KEY
+#hystrix dashboard 配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: hystrix.stream

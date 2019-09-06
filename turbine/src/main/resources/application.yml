@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: turbine
+server:
+  port: 9000
+management:
+  port: 8081
+eureka:
+  client:
+    service-url:
+      defaultZone: http://peer1:7001/eureka/
+turbine:
+  app-config: microservice-consumer-user
+  cluster-name-expression: new String("default")
+  combine-host-port: true
