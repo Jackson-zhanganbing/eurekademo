@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: config-client
+server:
+  port: 13000
+#开端点，也就是暴露接口
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh
