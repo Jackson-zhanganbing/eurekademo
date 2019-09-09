@@ -7,7 +7,7 @@ spring:
         enabled: true
       enabled: true
 server:
-  port: 13000
+  port: 13001
 #开端点，也就是暴露接口
 management:
   endpoints:

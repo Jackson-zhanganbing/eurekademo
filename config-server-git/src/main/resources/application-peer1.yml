@@ -8,7 +8,7 @@ spring:
           uri: https://github.com/Jackson-zhanganbing/distributed-config.git # 配置git仓库的地址
           search-paths: config-repo # git仓库地址下的相对地址，可以配置多个，用,分割。
 server:
-  port: 12000
+  port: 12001
 eureka:
   client:
     service-url:
