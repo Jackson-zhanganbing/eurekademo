@@ -14,8 +14,8 @@ public class AnnotationRibbonClientConfiguration {
     @Bean
     public ServerList<Server> ribbonServerList() {
         Server[] servers = new Server[2];
-        servers[0] = new Server("http://localhost:8100");
-        servers[1] = new Server("http://localhost:8101");
+        servers[0] = new Server("http://localhost:8001");
+        servers[1] = new Server("http://localhost:8002");
         ServerList<Server> serverList = new StaticServerList<>(servers);
         return serverList;
     }

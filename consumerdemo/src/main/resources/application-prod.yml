@@ -1,5 +1,5 @@
 server:
-  port: 8202
+  port: 9002
 spring:
   application:
     name: microservice-consumer-user

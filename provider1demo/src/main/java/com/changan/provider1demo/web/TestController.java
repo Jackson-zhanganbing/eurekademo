@@ -13,13 +13,13 @@ public class TestController {
 
     @RequestMapping("/user")
     public String getUser(){
-        return "hello eureka!provider1,8101";
+        return "hello eureka!provider1,8002";
     }
 
     @RequestMapping("/timeout")
     public String timeout() throws InterruptedException{
         Thread.sleep(1000000L);
-        return "hello eureka!provider1,8101";
+        return "hello eureka!provider1,8002";
     }
 
     @RequestMapping("/exception")
