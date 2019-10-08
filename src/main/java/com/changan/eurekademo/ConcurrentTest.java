@@ -1,17 +1,14 @@
 package com.changan.eurekademo;
 
+import com.changan.eurekademo.springtest.MyBean;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -23,33 +20,51 @@ import java.util.concurrent.atomic.AtomicInteger;
 @RestController
 @RequestMapping("/api")
 public class ConcurrentTest {
-    @Autowired
-    private KafkaTemplate kafkaTemplate;
+    static final CountDownLatch latch = new CountDownLatch(2000);
+    static final CountDownLatch latch1 = new CountDownLatch(2000);
+    private static final String url = "http://localhost:14000/microservice-provider-user/api/user";
+    private static AtomicInteger atomicInteger = new AtomicInteger();
+    private static AtomicInteger errorNum = new AtomicInteger();
+    private static Integer index = 1;
     @Autowired
     private RestTemplate restTemplate;
+    @Autowired
+    private MyBean myBean;
 
-    private static final String url = "http://127.0.0.1:80/api/del_stock";
-    private static AtomicInteger atomicInteger = new AtomicInteger();
-    private static Integer index = 1;
-    static final CountDownLatch latch = new CountDownLatch(100);
-    static final CountDownLatch latch1 = new CountDownLatch(100);
+    @GetMapping("/test")
+    public void test() throws Exception {
+        myBean.test();
+    }
 
     @GetMapping("/exe")
-    public void exe() throws Exception {
-        ThreadPoolExecutor executor = new ThreadPoolExecutor(100, 200, 60, TimeUnit.SECONDS, new LinkedBlockingDeque<>());
-        for (int i = 0; i < 100; i++) {
-            this.f1(executor);
+    public String exe(int num) throws Exception {
+        index = 1;
+        atomicInteger.set(0);
+        errorNum.set(0);
+        long startTime = System.currentTimeMillis();
+        ThreadFactory namedThreadFactory = new ThreadFactoryBuilder()
+                .setNameFormat("demo-pool-%d").build();
+
+        ExecutorService threadPool = new ThreadPoolExecutor(1000, 1200,
+                0L, TimeUnit.MILLISECONDS,
+                new LinkedBlockingQueue<Runnable>(1024), namedThreadFactory, new ThreadPoolExecutor.AbortPolicy());
+
+        for (int i = 0; i < num; i++) {
+            this.f1(threadPool);
             latch1.countDown();
         }
 
         latch.await();
 
-        System.out.println("执行完毕！");
-        System.out.println("执行了" + atomicInteger.get() + "次");
 
+        long endTime = System.currentTimeMillis();
+        Thread.sleep(1000);
+        String result = "执行了" + atomicInteger.get() + "次,失败：" + errorNum.get() + "次，执行时间是：" + (endTime - startTime);
+        threadPool.shutdown();
+        return result;
     }
 
-    public void f1(ThreadPoolExecutor executor) {
+    public void f1(ExecutorService executor) {
         executor.execute(new Decrement());
     }
 
@@ -67,7 +82,14 @@ public class ConcurrentTest {
             //方法一：
             //kafkaTemplate.send("xxx","test");
             //方法二：
-            String s = restTemplate.getForObject(realUrl, String.class);
+            try {
+                String s = restTemplate.getForObject(realUrl, String.class);
+                System.out.println(s);
+            } catch (Exception e) {
+                errorNum.addAndGet(index);
+                System.out.println(Thread.currentThread().getName() + "出错了==============出错数量：" + errorNum.get());
+                e.printStackTrace();
+            }
             latch.countDown();
         }
     }
