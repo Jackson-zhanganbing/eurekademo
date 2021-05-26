@@ -15,5 +15,4 @@ public interface TestService {
     @GetMapping("/api/timeout")
     String timeout();
 
-
 }

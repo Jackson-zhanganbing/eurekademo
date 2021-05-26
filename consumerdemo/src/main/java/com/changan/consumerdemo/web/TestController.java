@@ -1,12 +1,8 @@
 package com.changan.consumerdemo.web;
 
 import com.changan.consumerdemo.service.TestService;
-import com.sms.starter.dto.SendSMSDTO;
-import com.sms.starter.service.SMSService;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +12,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author zab
@@ -38,10 +33,6 @@ public class TestController {
 
     @Autowired
     private RedisTemplate redisTemplate;
-
-    @Autowired
-    private SMSService service;
-
 
     @RequestMapping("/user")
     public String getUser() {
@@ -133,14 +124,5 @@ public class TestController {
         return content;
     }
 
-    @KafkaListener(groupId = "mygroup", topics = "xxx")
-    public void listenKafka(ConsumerRecord record) {
-        String valStr = (String) record.value();
-        System.out.println(valStr);
-        if ("test".equals(valStr)) {
-            delOne();
-        }
-
-    }
 
 }

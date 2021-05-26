@@ -3,39 +3,7 @@ server:
 spring:
   application:
     name: microservice-consumer-user
-  redis:
-    host: 127.0.0.1
-    port: 6379
-  cache:
-    type: redis
-  kafka:
-    #bootstrap-servers: 127.0.0.1:9092,127.0.0.2:9092,127.0.0.3:9092
-    bootstrap-servers: 127.0.0.1:9092
-    producer:
-      retries: 0
-      batch-size: 16384
-      buffer-memory: 33554432
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
-      properties:
-        linger.ms: 1
 
-    consumer:
-      group-id: mygroup
-      enable-auto-commit: false
-      auto-commit-interval: 100ms
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      properties:
-        session.timeout.ms: 15000
-  datasource:
-    name: eureka-test
-    type: com.alibaba.druid.pool.DruidDataSource
-    druid:
-      url: jdbc:mysql://127.0.0.1:3306/zab
-      username: root
-      password: root
-      driver-class-name: com.mysql.jdbc.Driver
 eureka:
   client:
     service-url:
@@ -69,15 +37,7 @@ hystrix:
         isolation:
           thread:
             timeoutInMilliseconds: 20000
-mybatis:
-  mapper-locations: classpath:mapping/*.xml
-  type-aliases-package: com.changan.consumerdemo.entity
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-sms-config:
-  account-sid: xxx #这里填写平台获取的ID和KEY
-  auth-token: xxx  #这里填写平台获取的ID和KEY
-  appid: xxx #这里填写平台获取的ID和KEY
+
 #hystrix dashboard 配置
 management:
   endpoints:

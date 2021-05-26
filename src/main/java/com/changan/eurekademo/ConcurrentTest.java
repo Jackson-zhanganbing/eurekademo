@@ -1,7 +1,5 @@
 package com.changan.eurekademo;
 
-import com.changan.eurekademo.springtest.MyBean;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,13 +26,6 @@ public class ConcurrentTest {
     private static Integer index = 1;
     @Autowired
     private RestTemplate restTemplate;
-    @Autowired
-    private MyBean myBean;
-
-    @GetMapping("/test")
-    public void test() throws Exception {
-        myBean.test();
-    }
 
     @GetMapping("/exe")
     public String exe(int num) throws Exception {
@@ -42,8 +33,14 @@ public class ConcurrentTest {
         atomicInteger.set(0);
         errorNum.set(0);
         long startTime = System.currentTimeMillis();
-        ThreadFactory namedThreadFactory = new ThreadFactoryBuilder()
-                .setNameFormat("demo-pool-%d").build();
+        ThreadFactory namedThreadFactory = new ThreadFactory() {
+            @Override
+            public Thread newThread(Runnable runnable) {
+                Thread thread = new Thread(runnable);
+                thread.setName("mythread");
+                return thread;
+            }
+        };
 
         ExecutorService threadPool = new ThreadPoolExecutor(1000, 1200,
                 0L, TimeUnit.MILLISECONDS,
