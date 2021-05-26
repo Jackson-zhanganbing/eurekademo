@@ -7,3 +7,10 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:7001/eureka/
+zuul:
+  routes:
+    #自定义路由a到provider：
+    #http://localhost:14000/a/api/user
+    api-a:
+      path: /a/**
+      serviceId: microservice-provider-user

@@ -7,7 +7,9 @@ eureka:
   instance:
     hostname: peer1
   client:
+    #代表向注册中心注册自己
     register-with-eureka: true
+    #代表检索服务
     fetch-registry: true
     service-url:
       defaultZone: http://peer2:7002/eureka/
