@@ -1,7 +1,10 @@
 package com.changan.consumerdemo.config;
 
-import com.netflix.loadbalancer.*;
-import org.springframework.cloud.netflix.ribbon.StaticServerList;
+import com.netflix.client.config.IClientConfig;
+import com.netflix.loadbalancer.IRule;
+import com.netflix.loadbalancer.RandomRule;
+import com.netflix.loadbalancer.RoundRobinRule;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 
 /**
@@ -11,7 +14,7 @@ import org.springframework.context.annotation.Bean;
  * @date 2019-08-19 20:49
  */
 public class AnnotationRibbonClientConfiguration {
-    @Bean
+/*    @Bean
     public ServerList<Server> ribbonServerList() {
         Server[] servers = new Server[2];
         servers[0] = new Server("http://localhost:8001");
@@ -19,9 +22,13 @@ public class AnnotationRibbonClientConfiguration {
         ServerList<Server> serverList = new StaticServerList<>(servers);
         return serverList;
     }
+*/
+
+    @Autowired
+    private IClientConfig config;
 
     @Bean
-    public IRule initRule() {
+    public IRule ribbonRule(IClientConfig config) {
         // 轮询
         return new RoundRobinRule();
 
@@ -31,4 +38,20 @@ public class AnnotationRibbonClientConfiguration {
         // 随机
         //return new RandomRule();
     }
+
+
+ /*   @Override
+    public void initWithNiwsConfig(IClientConfig iClientConfig) {
+
+    }
+
+    @Override
+    public Server choose(Object o) {
+        ILoadBalancer lb = this.getLoadBalancer();
+
+        List<Server> upServerList = lb.getReachableServers();
+        List<Server> allServerList = lb.getAllServers();
+
+        return null;
+    }*/
 }
